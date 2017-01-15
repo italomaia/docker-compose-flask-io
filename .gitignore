@@ -1,6 +1,10 @@
+.ropeproject
+.vscode
 __pycache__
-node_modules/
 dist/
+node_modules/
+test/e2e/reports
+test/unit/coverage
 
 *.log
 *.sqlite
