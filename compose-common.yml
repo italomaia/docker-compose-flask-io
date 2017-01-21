@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  db:
+    image: postgres:9.6
+    env_file:
+      - env
+
+  ux:
+    command: sh -c "gulp --cwd=semantic-ui build && npm run build"
+    build: ./ux
+
+  app:
+    command: flask run -h 0.0.0.0 -p 8000
+    entrypoint: ["./entrypoint.sh"]
+    build: ./app
+    depends_on:
+      - db
+    env_file:
+      - env
+
+  web:
+    build: ./web
+    depends_on:
+      - ux
+      - app
+    env_file:
+      - env

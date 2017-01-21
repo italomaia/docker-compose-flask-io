@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  web:
+    env_file:
+      - env-dev
+    ports:
+      - "80:80"
+    volumes_from:
+      - ux:ro
+
+  app:
+    env_file:
+      - env-dev
+
+  ux:
+    command: sh -c "gulp --cwd=semantic-ui build && npm run dev"
+    volumes:
+      - "./ux:/usr/src/ux"
+
+  semantic:
+    command: gulp --cwd=semantic-ui watch
+    build: ./ux
+    depends_on:
+      - ux
+    volumes_from:
+      - ux:rw
