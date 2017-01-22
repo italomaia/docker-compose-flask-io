@@ -5,6 +5,7 @@ dist/
 node_modules/
 test/e2e/reports
 test/unit/coverage
+ux/src/assets/ui
 
 *.log
 *.sqlite
