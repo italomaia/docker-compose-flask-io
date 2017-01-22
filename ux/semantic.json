@@ -9,8 +9,8 @@
     },
     "output": {
       "packaged": "../src/assets/ui/",
-      "uncompressed": "../src/assets/ui/components/",
-      "compressed": "../src/assets/ui/components/",
+      "uncompressed": "dist/components/",
+      "compressed": "dist/components/",
       "themes": "../src/assets/ui/themes/"
     },
     "clean": "../src/assets/ui/"
