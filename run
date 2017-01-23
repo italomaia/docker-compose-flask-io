@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+
+import sys
+import subprocess
+
+
+def get_settings(env):
+    settings = ['-f', 'compose-common.yml']
+
+    if env == 'dev':
+        settings += ['-f', 'compose-dev.yml']
+    return settings
+
+
+def main(args):
+    env = None
+
+    if 'dev' in args:
+        env = 'dev'
+    elif 'prd' in args:
+        env = 'prd'
+    else:
+        print("please, inform environemtn [dev|prd]")
+        exit(0)
+
+    args.pop(args.index(env))
+
+    # make sure container is removed after run
+    if len(args) > 0 and args[0] == 'run':
+        if '--rm' not in args:
+            args.insert(1, '--rm')
+
+    print(run_compose(env, args))
+
+
+def run_compose(env, args):
+    settings = get_settings(env)
+    cmd = ['docker-compose'] + settings + args
+    return subprocess.check_output(cmd).decode()
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
