@@ -1,5 +1,4 @@
 from empty import Empty
-from . import config
 import sys
 import os
 
@@ -23,7 +22,3 @@ class App(Empty):
         @self.route("/")
         def index():
             return "oi"
-
-
-# flask-io is already initialized
-app = app_factory(config, 'app')
