@@ -125,16 +125,30 @@ class Empty(Flask):
         Configure extensions like mail and login here
         """
         for ext_path in self.config.get('EXTENSIONS', []):
+            extra_args = tuple()
+
             try:
                 ext = import_string(ext_path)
             except:
                 msg = 'No {e_name} extension found'
                 raise ExtensionNotFoundException(msg.format(e_name=ext_path))
 
-            if getattr(ext, 'init_app', False):
-                ext.init_app(self)
-            else:
-                ext(self)
+            try:
+                # some extensions require extra arguments for proper
+                # initialization; coff, coff, flask-security
+                extra_args_fnc = import_string("{}_extra_args".format(ext_path))
+                extra_args = extra_args_fnc()
+                extra_args = tuple(extra_args)
+
+                msg = 'Loading extra args for extension {}'
+                self.logger.info(msg.format(ext_path))
+            except ImportError as e:
+                msg = 'Extension {} does not use extra arguments'
+                self.logger.debug(msg.format(ext_path))
+
+            # some extensions are initialized in a more fancy way
+            init_app = ext.init_app if hasattr(ext, 'init_app') else ext
+            init_app(*((self,) + extra_args))
 
     def configure_before_request(self):
         """
