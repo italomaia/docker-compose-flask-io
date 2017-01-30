@@ -9,6 +9,8 @@ services:
   ux:
     command: sh -c "gulp --cwd=semantic-ui build && npm run build"
     build: ./ux
+    depends_on:
+      - app
 
   app:
     command: flask run -h 0.0.0.0 -p 8000
@@ -23,6 +25,5 @@ services:
     build: ./web
     depends_on:
       - ux
-      - app
     env_file:
       - env
