@@ -13,7 +13,7 @@ server {
   server_name ${DOMAINS};
   root /usr/src/ux/dist;
 
-  location ~ /(favicon\.ico|app\.js|__webpack_hmr|static/)?$ {
+  location ~ /(favicon\.ico|app\.js|__webpack_hmr|static/.*)?$ {
     proxy_pass http://ux;
   }
 
