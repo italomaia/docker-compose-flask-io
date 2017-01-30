@@ -36,6 +36,7 @@ def main(args):
 def run_compose(env, args):
     settings = get_settings(env)
     cmd = ['docker-compose'] + settings + args
+    print("command:\n=>", ' '.join(cmd))
     return subprocess.check_output(cmd).decode()
 
 
