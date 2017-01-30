@@ -2,6 +2,10 @@ upstream app {
   server app:8000;
 }
 
+upstream app_ws {
+  server app:8000;
+}
+
 upstream ux {
   server ux:8080;
 }
@@ -13,20 +17,27 @@ server {
   server_name ${DOMAINS};
   root /usr/src/ux/dist;
 
-  location ~ /(favicon\.ico|app\.js|__webpack_hmr|static/.*)?$ {
+  location ~ /(favicon\.ico|app\.js|__webpack_hmr|static/.*)?${DO} {
     proxy_pass http://ux;
   }
 
   location / {
-    proxy_pass http://app;
-
     proxy_set_header X-Real-IP ${DO}remote_addr;
     proxy_set_header Host ${DO}host;
     proxy_set_header X-Forwarded-For ${DO}proxy_add_x_forwarded_for;
 
-    # websocket support
+    proxy_pass http://app;
+  }
+
+  location /socket.io {
+    proxy_set_header X-Real-IP ${DO}remote_addr;
+    proxy_set_header Host ${DO}host;
+    proxy_set_header X-Forwarded-For ${DO}proxy_add_x_forwarded_for;
+
     proxy_http_version 1.1;
+    proxy_buffering off;
     proxy_set_header Upgrade ${DO}http_upgrade;
-    proxy_set_header Connection "upgrade";
+    proxy_set_header Connection "Upgrade";
+    proxy_pass http://app_ws/socket.io;
   }
 }
