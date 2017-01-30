@@ -19,7 +19,9 @@ RUN npm install -s
 
 COPY semantic.json ./
 COPY semantic-ui ./
-RUN gulp --cwd=semantic-ui build
+RUN npm install semantic-ui@2.2.7 \
+  && gulp --cwd=semantic-ui build \
+  && npm cache clean
 
 COPY . ./
 RUN chown -R ${USR}:${USR} ./
